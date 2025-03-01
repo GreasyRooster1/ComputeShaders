@@ -19,7 +19,9 @@ import java.nio.IntBuffer;
 
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
-import static org.lwjgl.opengl.GL33.*;
+import static org.lwjgl.glfw.GLFW.GLFW_CONTEXT_VERSION_MAJOR;
+import static org.lwjgl.glfw.GLFW.GLFW_CONTEXT_VERSION_MINOR;
+import static org.lwjgl.opengl.GL45.*;
 import static org.lwjgl.system.MemoryStack.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
@@ -54,6 +56,8 @@ public class Main {
         GLFW.glfwDefaultWindowHints();
         GLFW.glfwWindowHint(GLFW.GLFW_VISIBLE, GLFW.GLFW_FALSE);
         GLFW.glfwWindowHint(GLFW.GLFW_RESIZABLE, GLFW.GLFW_TRUE);
+        GLFW.glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+        GLFW.glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
 
         window = GLFW.glfwCreateWindow(WIDTH, HEIGHT, "Cube", NULL, NULL);
         if(window == NULL) {
