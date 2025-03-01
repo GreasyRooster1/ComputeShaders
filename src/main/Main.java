@@ -2,8 +2,10 @@ package main;
 
 import main.Mesh.Mesh;
 import main.Objects.MeshObject;
+import main.Objects.RawMeshObject;
 import main.Objects.SkyBox;
 import main.Resources.ResourceLoader;
+import main.Shaders.ScreenShader;
 import main.Shaders.TextureShader;
 import main.Texture.CubeMap;
 import main.Texture.Texture;
@@ -98,18 +100,26 @@ public class Main {
         MeshObject monkey = new MeshObject((Mesh) resources.getResource("models/monkey.obj"), new TextureShader());
         monkey.texture = (Texture) resources.getResource("textures/monkey.png");
 
+        RawMeshObject computeQuad = new RawMeshObject((Mesh) resources.getResource("models/quad.obj"), new ScreenShader());
+
+        ComputeShader computeShader = new ComputeShader("resources/shaders/compute/test.comp");
+        computeShader.setupTexture(512,512);
+
         glClearColor(0.1f,0.2f,0.3f,1.0f);
 
         while(!GLFW.glfwWindowShouldClose(window)) {
             glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
-            camera.setPosition(new Vector3f(
-                    (float)cos(GLFW.glfwGetTime())*4,
-                    (float)sin(GLFW.glfwGetTime()*1.1f)*4,
-                    (float)sin(GLFW.glfwGetTime())*4
-            ));
+//            camera.setPosition(new Vector3f(
+//                    (float)cos(GLFW.glfwGetTime())*4,
+//                    (float)sin(GLFW.glfwGetTime()*1.1f)*4,
+//                    (float)sin(GLFW.glfwGetTime())*4
+//            ));
 
-            monkey.render(camera);
+            computeShader.execute();
+            computeShader.bindTexture();
+            computeQuad.render();
+
 
             GLFW.glfwSwapBuffers(window);
             GLFW.glfwPollEvents();

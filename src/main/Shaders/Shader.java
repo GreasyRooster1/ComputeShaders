@@ -15,14 +15,10 @@ public abstract class Shader {
     private int programID;
     private int vertexID;
     private int fragmentID;
-    private int computeID;
 
     private FloatBuffer matrix = BufferUtils.createFloatBuffer(16);
 
     public Shader(String vertPath, String fragPath){
-        this(vertPath,fragPath,null);
-    }
-    public Shader(String vertPath, String fragPath,String computePath){
         String vertexSource = Files.loadStringFromFile(vertPath);
         String fragmentSource = Files.loadStringFromFile(fragPath);
 
@@ -36,20 +32,9 @@ public abstract class Shader {
         glCompileShader(fragmentID);
         checkCompileStatus(fragmentID);
 
-        if(computePath!=null){
-            String computeSource = Files.loadStringFromFile(computePath);
-            computeID = glCreateShader(GL_COMPUTE_SHADER);
-            glShaderSource(computeID, computeSource);
-            glCompileShader(computeID);
-            checkCompileStatus(computeID);
-        }
-
         programID = glCreateProgram();
         glAttachShader(programID, vertexID);
         glAttachShader(programID, fragmentID);
-        if(computePath!=null){
-            glAttachShader(programID, computeID);
-        }
         glLinkProgram(programID);
 
         glDeleteShader(vertexID);
