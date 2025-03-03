@@ -34,6 +34,8 @@ public class Main {
     public static int WIDTH = 800;
     public static int HEIGHT = 600;
 
+    public int currentFrame = 0;
+
     public void run(){
         init();
         loop();
@@ -79,7 +81,7 @@ public class Main {
             GLFW.glfwSetWindowPos(window,(vidmode.width() - pWidth.get(0)) / 2,(vidmode.height() - pHeight.get(0)) / 2);
 
             GLFW.glfwMakeContextCurrent(window);
-            GLFW.glfwSwapInterval(1);
+            GLFW.glfwSwapInterval(0);
             GLFW.glfwShowWindow(window);
         }
     }
@@ -103,7 +105,7 @@ public class Main {
         RawMeshObject computeQuad = new RawMeshObject((Mesh) resources.getResource("models/quad.obj"), new ScreenShader());
 
         ComputeShader computeShader = new ComputeShader("resources/shaders/compute/test.comp");
-        computeShader.setupTexture(512,512);
+        computeShader.setupTexture(1000,1000);
 
         glClearColor(0.1f,0.2f,0.3f,1.0f);
 
@@ -116,6 +118,8 @@ public class Main {
 //                    (float)sin(GLFW.glfwGetTime())*4
 //            ));
 
+            computeShader.bind();
+            computeShader.setUniform1f("t",currentFrame);
             computeShader.execute();
             computeShader.bindTexture();
             computeQuad.render();
@@ -123,6 +127,9 @@ public class Main {
 
             GLFW.glfwSwapBuffers(window);
             GLFW.glfwPollEvents();
+
+            Monitor.tick();
+            currentFrame++;
         }
     }
 

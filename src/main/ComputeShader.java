@@ -43,9 +43,12 @@ public class ComputeShader {
         glBindImageTexture(0, texture, 0, false, 0, GL_READ_ONLY, GL_RGBA32F);
     }
 
-    public void execute(){
+    public void bind(){
         glUseProgram(ID);
-        glDispatchCompute(texWidth, texHeight, 1);
+    }
+
+    public void execute(){
+        glDispatchCompute(texWidth/10, texHeight/10, 1);
 
 // make sure writing to image has finished before read
         glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
@@ -54,5 +57,20 @@ public class ComputeShader {
     public void bindTexture(){
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, texture);
+    }
+
+    public int getUniformLocation(String uniformName){
+        return glGetUniformLocation(ID, uniformName);
+    }
+
+    protected void bindAttribute(int attribute, String variableName) {
+        glBindAttribLocation(ID, attribute, variableName);
+    }
+
+    public void setUniform1i(String uniformName, int value) {
+        glUniform1i(getUniformLocation(uniformName), value);
+    }
+    public void setUniform1f(String uniformName, float value) {
+        glUniform1f(getUniformLocation(uniformName), value);
     }
 }
