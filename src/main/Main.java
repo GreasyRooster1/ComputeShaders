@@ -19,8 +19,6 @@ import org.lwjgl.system.MemoryStack;
 
 import java.nio.IntBuffer;
 
-import static java.lang.Math.cos;
-import static java.lang.Math.sin;
 import static org.lwjgl.glfw.GLFW.GLFW_CONTEXT_VERSION_MAJOR;
 import static org.lwjgl.glfw.GLFW.GLFW_CONTEXT_VERSION_MINOR;
 import static org.lwjgl.opengl.GL45.*;
@@ -104,7 +102,7 @@ public class Main {
 
         RawMeshObject computeQuad = new RawMeshObject((Mesh) resources.getResource("models/quad.obj"), new ScreenShader());
 
-        ComputeShader computeShader = new ComputeShader("resources/shaders/compute/test.comp");
+        TextureComputeShader computeShader = new TextureComputeShader("resources/shaders/compute/particleTest.comp");
         computeShader.setupTexture(1000,1000);
 
         glClearColor(0.1f,0.2f,0.3f,1.0f);

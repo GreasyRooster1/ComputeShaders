@@ -1,8 +1,8 @@
 package main.Shaders;
 
-public class ColorShader extends Shader {
+public class ColorShader extends ProjectionShader {
     public ColorShader() {
-        super("resources/shaders/color/color.vert", "resources/shaders/color/color.frag");
+        super("resources/shaders/universal.vert", "resources/shaders/color/color.frag");
     }
 
     @Override
