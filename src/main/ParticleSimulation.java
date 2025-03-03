@@ -1,6 +1,7 @@
 package main;
 
 import main.Shaders.ColorShader;
+import main.Shaders.ParticleShader;
 import main.Shaders.ProjectionShader;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -10,7 +11,7 @@ import static org.lwjgl.opengl.GL45.*;
 
 public class ParticleSimulation {
     private ComputeShader computeShader;
-    private ProjectionShader particleShader = new ColorShader();
+    private ProjectionShader particleShader = new ParticleShader();
     private Vector4f[] positions;
 
     private Vector3f size = new Vector3f();
@@ -22,6 +23,7 @@ public class ParticleSimulation {
         this.computeShader = computeShader;
         this.size = size;
     }
+
     public void initBuffers(){
         totalParticles = (int) (size.x*size.y*size.z);
         positions = new Vector4f[totalParticles];
@@ -52,11 +54,10 @@ public class ParticleSimulation {
         for (int x = 0; x < size.x; x++) {
             for (int y = 0; y < size.y; y++) {
                 for (int z = 0; z < size.z; z++) {
-                    p.x = dx*x;
-                    p.y = dy*y;
-                    p.z = dz*z;
+                    p.x = dx*x-1f;
+                    p.y = dy*y-1f;
+                    p.z = dz*z-1f;
                     p.w = 1f;
-                    p.sub(new Vector4f(-1f));
                     positions[particleIndex]=p;
                     particleIndex++;
                 }
@@ -72,7 +73,9 @@ public class ParticleSimulation {
     private void renderParticles(Camera camera) {
         particleShader.use();
         particleShader.passCamera(camera);
-        particleShader.passModel(new Matrix4f().identity());
+        particleShader.passModel(new Matrix4f());
+
+        glPointSize(2f);
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -92,10 +95,11 @@ public class ParticleSimulation {
         float[] floats = new float[positions.length*4];
         for(int i=0;i<positions.length;i++){
             int index = i*4;
-            floats[index+1]=positions[i].x;
-            floats[index+2]=positions[i].y;
-            floats[index+3]=positions[i].z;
-            floats[index+4]=positions[i].w;
+            positions[i] = new Vector4f();
+            floats[index]=positions[i].x;
+            floats[index+1]=positions[i].y;
+            floats[index+2]=positions[i].z;
+            floats[index+3]=positions[i].w;
         }
         return floats;
     }

@@ -26,8 +26,7 @@ public class ComputeShader {
     public void execute(int sx,int sy,int sz){
         glDispatchCompute(sx, sy, sz);
 
-// make sure writing to image has finished before read
-        glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
+        glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
     }
 
     public int getUniformLocation(String uniformName){

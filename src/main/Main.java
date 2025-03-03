@@ -5,6 +5,7 @@ import main.Objects.MeshObject;
 import main.Objects.RawMeshObject;
 import main.Objects.SkyBox;
 import main.Resources.ResourceLoader;
+import main.Shaders.ColorShader;
 import main.Shaders.ScreenShader;
 import main.Shaders.TextureShader;
 import main.Texture.CubeMap;
@@ -19,6 +20,8 @@ import org.lwjgl.system.MemoryStack;
 
 import java.nio.IntBuffer;
 
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
 import static org.lwjgl.glfw.GLFW.GLFW_CONTEXT_VERSION_MAJOR;
 import static org.lwjgl.glfw.GLFW.GLFW_CONTEXT_VERSION_MINOR;
 import static org.lwjgl.opengl.GL45.*;
@@ -97,30 +100,39 @@ public class Main {
         CubeMap cubeMap = new CubeMap("resources/textures/065.png");
         SkyBox skybox = new SkyBox(cubeMap);
 
-        MeshObject monkey = new MeshObject((Mesh) resources.getResource("models/monkey.obj"), new TextureShader());
-        monkey.texture = (Texture) resources.getResource("textures/monkey.png");
+        MeshObject monkey = new MeshObject((Mesh) resources.getResource("models/monkey.obj"), new ColorShader(new Vector3f(1f,0f,0f)));
+        //monkey.texture = (Texture) resources.getResource("textures/monkey.png");
 
-        RawMeshObject computeQuad = new RawMeshObject((Mesh) resources.getResource("models/quad.obj"), new ScreenShader());
+//        RawMeshObject computeQuad = new RawMeshObject((Mesh) resources.getResource("models/quad.obj"), new ScreenShader());
+//
+//        TextureComputeShader computeShader = new TextureComputeShader("resources/shaders/compute/particleTest.comp");
+//        computeShader.setupTexture(1000,1000);
 
-        TextureComputeShader computeShader = new TextureComputeShader("resources/shaders/compute/particleTest.comp");
-        computeShader.setupTexture(1000,1000);
+        ComputeShader simComputeShader = new ComputeShader("resources/shaders/compute/particleTest.comp");
+        ParticleSimulation simulation = new ParticleSimulation(simComputeShader,new Vector3f(10,10,10));
+        simulation.initBuffers();
+        simulation.calcPositions();
 
         glClearColor(0.1f,0.2f,0.3f,1.0f);
 
         while(!GLFW.glfwWindowShouldClose(window)) {
             glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
-//            camera.setPosition(new Vector3f(
-//                    (float)cos(GLFW.glfwGetTime())*4,
-//                    (float)sin(GLFW.glfwGetTime()*1.1f)*4,
-//                    (float)sin(GLFW.glfwGetTime())*4
-//            ));
+            camera.setPosition(new Vector3f(
+                    (float)cos(GLFW.glfwGetTime())*4,
+                    (float)sin(GLFW.glfwGetTime()*1.1f)*4,
+                    (float)sin(GLFW.glfwGetTime())*4
+            ));
 
-            computeShader.bind();
-            computeShader.setUniform1f("t",currentFrame);
-            computeShader.execute();
-            computeShader.bindTexture();
-            computeQuad.render();
+            simulation.render(camera);
+            //monkey.render(camera);
+
+//            computeShader.bind();
+//            computeShader.setUniform1f("t",currentFrame);
+//            computeShader.execute();
+//            computeShader.bindTexture();
+//            computeQuad.render();
+
 
 
             GLFW.glfwSwapBuffers(window);
