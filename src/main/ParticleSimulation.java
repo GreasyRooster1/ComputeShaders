@@ -49,15 +49,16 @@ public class ParticleSimulation {
         float dy = 2f/size.y;
         float dz = 2f/size.z;
 
-        Vector4f p = new Vector4f();
         int particleIndex = 0;
         for (int x = 0; x < size.x; x++) {
             for (int y = 0; y < size.y; y++) {
                 for (int z = 0; z < size.z; z++) {
+                    Vector4f p = new Vector4f();
                     p.x = dx*x-1f;
                     p.y = dy*y-1f;
                     p.z = dz*z-1f;
                     p.w = 1f;
+                    System.out.println(p.x);
                     positions[particleIndex]=p;
                     particleIndex++;
                 }

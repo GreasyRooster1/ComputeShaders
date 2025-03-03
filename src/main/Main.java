@@ -109,7 +109,7 @@ public class Main {
 //        computeShader.setupTexture(1000,1000);
 
         ComputeShader simComputeShader = new ComputeShader("resources/shaders/compute/particleTest.comp");
-        ParticleSimulation simulation = new ParticleSimulation(simComputeShader,new Vector3f(10,10,10));
+        ParticleSimulation simulation = new ParticleSimulation(simComputeShader,new Vector3f(2,2,3));
         simulation.initBuffers();
         simulation.calcPositions();
 
