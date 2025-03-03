@@ -6,6 +6,7 @@ import main.Objects.RawMeshObject;
 import main.Objects.SkyBox;
 import main.Resources.ResourceLoader;
 import main.Shaders.ColorShader;
+import main.Shaders.ParticleShader;
 import main.Shaders.ScreenShader;
 import main.Shaders.TextureShader;
 import main.Texture.CubeMap;
@@ -100,7 +101,7 @@ public class Main {
         CubeMap cubeMap = new CubeMap("resources/textures/065.png");
         SkyBox skybox = new SkyBox(cubeMap);
 
-        MeshObject monkey = new MeshObject((Mesh) resources.getResource("models/monkey.obj"), new ColorShader(new Vector3f(1f,0f,0f)));
+        MeshObject monkey = new MeshObject((Mesh) resources.getResource("models/monkey.obj"), new ParticleShader());
         //monkey.texture = (Texture) resources.getResource("textures/monkey.png");
 
 //        RawMeshObject computeQuad = new RawMeshObject((Mesh) resources.getResource("models/quad.obj"), new ScreenShader());
@@ -109,23 +110,23 @@ public class Main {
 //        computeShader.setupTexture(1000,1000);
 
         ComputeShader simComputeShader = new ComputeShader("resources/shaders/compute/particleTest.comp");
-        ParticleSimulation simulation = new ParticleSimulation(simComputeShader,new Vector3f(2,2,3));
-        simulation.initBuffers();
+        ParticleSimulation simulation = new ParticleSimulation(simComputeShader,new Vector3f(10,10,10));
         simulation.calcPositions();
+        simulation.initBuffers();
 
         glClearColor(0.1f,0.2f,0.3f,1.0f);
 
         while(!GLFW.glfwWindowShouldClose(window)) {
             glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
-            camera.setPosition(new Vector3f(
-                    (float)cos(GLFW.glfwGetTime())*4,
-                    (float)sin(GLFW.glfwGetTime()*1.1f)*4,
-                    (float)sin(GLFW.glfwGetTime())*4
-            ));
+//            camera.setPosition(new Vector3f(
+//                    (float)cos(GLFW.glfwGetTime())*4,
+//                    (float)sin(GLFW.glfwGetTime()*1.1f)*4,
+//                    (float)sin(GLFW.glfwGetTime())*4
+//            ));
 
-            simulation.render(camera);
-            //monkey.render(camera);
+            //simulation.render(camera);
+            monkey.render(camera);
 
 //            computeShader.bind();
 //            computeShader.setUniform1f("t",currentFrame);

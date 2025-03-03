@@ -25,9 +25,6 @@ public class ParticleSimulation {
     }
 
     public void initBuffers(){
-        totalParticles = (int) (size.x*size.y*size.z);
-        positions = new Vector4f[totalParticles];
-
         int mPosBuf = glCreateBuffers();
         int bufferSize = positions.length*Float.SIZE*4;
 
@@ -45,6 +42,8 @@ public class ParticleSimulation {
     }
 
     void calcPositions() {
+        totalParticles = (int) (size.x*size.y*size.z);
+        positions = new Vector4f[totalParticles];
         float dx = 2f/size.x;
         float dy = 2f/size.y;
         float dz = 2f/size.z;
@@ -53,12 +52,7 @@ public class ParticleSimulation {
         for (int x = 0; x < size.x; x++) {
             for (int y = 0; y < size.y; y++) {
                 for (int z = 0; z < size.z; z++) {
-                    Vector4f p = new Vector4f();
-                    p.x = dx*x-1f;
-                    p.y = dy*y-1f;
-                    p.z = dz*z-1f;
-                    p.w = 1f;
-                    System.out.println(p.x);
+                    Vector4f p = new Vector4f(dx*x-1f,dy*y-1f,dz*z-1f,1f);
                     positions[particleIndex]=p;
                     particleIndex++;
                 }
@@ -76,7 +70,7 @@ public class ParticleSimulation {
         particleShader.passCamera(camera);
         particleShader.passModel(new Matrix4f());
 
-        glPointSize(2f);
+        glPointSize(5f);
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -96,12 +90,13 @@ public class ParticleSimulation {
         float[] floats = new float[positions.length*4];
         for(int i=0;i<positions.length;i++){
             int index = i*4;
-            positions[i] = new Vector4f();
             floats[index]=positions[i].x;
             floats[index+1]=positions[i].y;
             floats[index+2]=positions[i].z;
             floats[index+3]=positions[i].w;
         }
+
+
         return floats;
     }
 }
