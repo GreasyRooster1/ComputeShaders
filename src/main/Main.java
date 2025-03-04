@@ -91,7 +91,7 @@ public class Main {
         ResourceLoader resources = new ResourceLoader("resources");
         resources.loadAllResources();
 
-        Camera camera = new Camera(new Vector3f(6f,1f,0f),new Vector3f(0f,0f,0f));
+        Camera camera = new Camera(new Vector3f(20f,1f,0f),new Vector3f(0f,0f,0f));
 
         CubeMap cubeMap = new CubeMap("resources/textures/065.png");
         SkyBox skybox = new SkyBox(cubeMap);
@@ -105,11 +105,11 @@ public class Main {
 //        computeShader.setupTexture(1000,1000);
 
         ComputeShader simComputeShader = new ComputeShader("resources/shaders/compute/particleTest.comp");
-        ParticleSimulation simulation = new ParticleSimulation(simComputeShader,new Vector3f(100,100,100));
+        ParticleSimulation simulation = new ParticleSimulation(simComputeShader,new Vector3f(200,200,200));
         simulation.calcParticles();
         simulation.initBuffers();
 
-        glClearColor(0.1f,0.2f,0.3f,1.0f);
+        glClearColor(0.0f,0.0f,0.0f,1.0f);
 
         while(!GLFW.glfwWindowShouldClose(window)) {
             glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
