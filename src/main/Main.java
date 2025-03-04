@@ -28,8 +28,8 @@ public class Main {
 
     private long window;
 
-    public static int WIDTH = 800;
-    public static int HEIGHT = 600;
+    public static int WIDTH = 1000;
+    public static int HEIGHT = 1000;
 
     public int currentFrame = 0;
 
@@ -105,7 +105,7 @@ public class Main {
 //        computeShader.setupTexture(1000,1000);
 
         ComputeShader simComputeShader = new ComputeShader("resources/shaders/compute/particleTest.comp");
-        ParticleSimulation simulation = new ParticleSimulation(simComputeShader,new Vector3f(200,200,200));
+        ParticleSimulation simulation = new ParticleSimulation(simComputeShader,new Vector3f(10,50,100));
         simulation.calcParticles();
         simulation.initBuffers();
 
