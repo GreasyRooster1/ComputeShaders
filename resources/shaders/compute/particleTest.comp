@@ -10,7 +10,7 @@ void main() {
     uint idx = gl_GlobalInvocationID.x;
     vec3 p = Position[idx].xyz;
 
-    p+=vec3(1);
+    p+=vec3(0.0001);
 
     Position[idx].xyz = p;
 }

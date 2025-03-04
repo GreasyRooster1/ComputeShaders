@@ -119,14 +119,14 @@ public class Main {
         while(!GLFW.glfwWindowShouldClose(window)) {
             glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
-//            camera.setPosition(new Vector3f(
-//                    (float)cos(GLFW.glfwGetTime())*4,
-//                    (float)sin(GLFW.glfwGetTime()*1.1f)*4,
-//                    (float)sin(GLFW.glfwGetTime())*4
-//            ));
+            camera.setPosition(new Vector3f(
+                    (float)cos(GLFW.glfwGetTime())*4,
+                    (float)sin(GLFW.glfwGetTime()*1.1f)*4,
+                    (float)sin(GLFW.glfwGetTime())*4
+            ));
 
-            //simulation.render(camera);
-            monkey.render(camera);
+            simulation.render(camera);
+            //monkey.render(camera);
 
 //            computeShader.bind();
 //            computeShader.setUniform1f("t",currentFrame);

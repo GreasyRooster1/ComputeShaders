@@ -28,13 +28,13 @@ public class ParticleSimulation {
         int mPosBuf = glCreateBuffers();
         int bufferSize = positions.length*Float.SIZE*4;
 
-        glBindBufferBase(GL_ARRAY_BUFFER,0,mPosBuf);
+        glBindBufferBase(GL_SHADER_STORAGE_BUFFER,0,mPosBuf);
         glBufferData(GL_SHADER_STORAGE_BUFFER,getFloatList(),GL_DYNAMIC_DRAW);
 
         mVAO = glGenVertexArrays();
         glBindVertexArray(mVAO);
 
-        glBindBuffer(GL_ARRAY_BUFFER,mVAO);
+        glBindBuffer(GL_ARRAY_BUFFER,mPosBuf);
         glVertexAttribPointer(0, 4, GL_FLOAT, false, 0, 0);
         glEnableVertexAttribArray(0);
 
