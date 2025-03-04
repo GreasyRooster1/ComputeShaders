@@ -2,15 +2,10 @@ package main;
 
 import main.Mesh.Mesh;
 import main.Objects.MeshObject;
-import main.Objects.RawMeshObject;
 import main.Objects.SkyBox;
 import main.Resources.ResourceLoader;
-import main.Shaders.ColorShader;
 import main.Shaders.ParticleShader;
-import main.Shaders.ScreenShader;
-import main.Shaders.TextureShader;
 import main.Texture.CubeMap;
-import main.Texture.Texture;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.Callbacks;
 import org.lwjgl.glfw.GLFW;
@@ -83,7 +78,7 @@ public class Main {
             GLFW.glfwSetWindowPos(window,(vidmode.width() - pWidth.get(0)) / 2,(vidmode.height() - pHeight.get(0)) / 2);
 
             GLFW.glfwMakeContextCurrent(window);
-            GLFW.glfwSwapInterval(0);
+            GLFW.glfwSwapInterval(1);
             GLFW.glfwShowWindow(window);
         }
     }
@@ -96,7 +91,7 @@ public class Main {
         ResourceLoader resources = new ResourceLoader("resources");
         resources.loadAllResources();
 
-        Camera camera = new Camera(new Vector3f(2f,1f,1f),new Vector3f(0f,0f,0f));
+        Camera camera = new Camera(new Vector3f(2f,1f,0f),new Vector3f(0f,0f,0f));
 
         CubeMap cubeMap = new CubeMap("resources/textures/065.png");
         SkyBox skybox = new SkyBox(cubeMap);
@@ -110,8 +105,8 @@ public class Main {
 //        computeShader.setupTexture(1000,1000);
 
         ComputeShader simComputeShader = new ComputeShader("resources/shaders/compute/particleTest.comp");
-        ParticleSimulation simulation = new ParticleSimulation(simComputeShader,new Vector3f(10,10,10));
-        simulation.calcPositions();
+        ParticleSimulation simulation = new ParticleSimulation(simComputeShader,new Vector3f(100,100,100));
+        simulation.calcParticles();
         simulation.initBuffers();
 
         glClearColor(0.1f,0.2f,0.3f,1.0f);
@@ -119,11 +114,11 @@ public class Main {
         while(!GLFW.glfwWindowShouldClose(window)) {
             glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
-            camera.setPosition(new Vector3f(
-                    (float)cos(GLFW.glfwGetTime())*4,
-                    (float)sin(GLFW.glfwGetTime()*1.1f)*4,
-                    (float)sin(GLFW.glfwGetTime())*4
-            ));
+//            camera.setPosition(new Vector3f(
+//                    (float)cos(GLFW.glfwGetTime())*4,
+//                    (float)sin(GLFW.glfwGetTime()*1.1f)*4,
+//                    (float)sin(GLFW.glfwGetTime())*4
+//            ));
 
             simulation.render(camera);
             //monkey.render(camera);

@@ -1,18 +1,19 @@
 package main;
 
-import main.Shaders.ColorShader;
 import main.Shaders.ParticleShader;
 import main.Shaders.ProjectionShader;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
+import static java.lang.Math.*;
 import static org.lwjgl.opengl.GL45.*;
 
 public class ParticleSimulation {
     private ComputeShader computeShader;
     private ProjectionShader particleShader = new ParticleShader();
     private Vector4f[] positions;
+    private Vector4f[] velocities;
 
     private Vector3f size = new Vector3f();
     private int totalParticles;
@@ -26,10 +27,13 @@ public class ParticleSimulation {
 
     public void initBuffers(){
         int mPosBuf = glCreateBuffers();
-        int bufferSize = positions.length*Float.SIZE*4;
+        int mVelBuf = glCreateBuffers();
 
         glBindBufferBase(GL_SHADER_STORAGE_BUFFER,0,mPosBuf);
-        glBufferData(GL_SHADER_STORAGE_BUFFER,getFloatList(),GL_DYNAMIC_DRAW);
+        glBufferData(GL_SHADER_STORAGE_BUFFER,getFloatList(positions),GL_DYNAMIC_DRAW);
+
+        glBindBufferBase(GL_SHADER_STORAGE_BUFFER,1,mVelBuf);
+        glBufferData(GL_SHADER_STORAGE_BUFFER,getFloatList(velocities),GL_DYNAMIC_DRAW);
 
         mVAO = glGenVertexArrays();
         glBindVertexArray(mVAO);
@@ -39,21 +43,31 @@ public class ParticleSimulation {
         glEnableVertexAttribArray(0);
 
         glBindVertexArray(0);
+
+        glPointSize(2f);
     }
 
-    void calcPositions() {
+    void calcParticles() {
         totalParticles = (int) (size.x*size.y*size.z);
         positions = new Vector4f[totalParticles];
-        float dx = 2f/size.x;
-        float dy = 2f/size.y;
-        float dz = 2f/size.z;
+        velocities = new Vector4f[totalParticles];
+        double deltaDeg = 2*PI/(double)size.x;
+        double deltaDist = .9/(double)size.y;
+        double deltaH = 1/(double)size.z;
+
+        double angleDif = PI/4;
 
         int particleIndex = 0;
-        for (int x = 0; x < size.x; x++) {
-            for (int y = 0; y < size.y; y++) {
-                for (int z = 0; z < size.z; z++) {
-                    Vector4f p = new Vector4f(dx*x-1f,dy*y-1f,dz*z-1f,1f);
+        for (double deg = 0; deg < 2f*PI; deg+=deltaDeg) {
+            for (double dist = .1; dist < 1f; dist+=deltaDist) {
+                for (double h = 0; h < 1f; h+=deltaH) {
+                    if(particleIndex>=totalParticles){
+                        return;
+                    }
+                    Vector4f p = new Vector4f((float) (cos(deg)*dist),0,(float) (sin(deg)*dist),1);
+                    Vector4f v = new Vector4f(0,0,0,0);
                     positions[particleIndex]=p;
+                    velocities[particleIndex]=v;
                     particleIndex++;
                 }
             }
@@ -70,8 +84,6 @@ public class ParticleSimulation {
         particleShader.passCamera(camera);
         particleShader.passModel(new Matrix4f());
 
-        glPointSize(5f);
-
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -86,14 +98,14 @@ public class ParticleSimulation {
     }
 
     //util
-    public float[] getFloatList(){
-        float[] floats = new float[positions.length*4];
-        for(int i=0;i<positions.length;i++){
+    public float[] getFloatList(Vector4f[] arr){
+        float[] floats = new float[arr.length*4];
+        for(int i=0;i<arr.length;i++){
             int index = i*4;
-            floats[index]=positions[i].x;
-            floats[index+1]=positions[i].y;
-            floats[index+2]=positions[i].z;
-            floats[index+3]=positions[i].w;
+            floats[index]=arr[i].x;
+            floats[index+1]=arr[i].y;
+            floats[index+2]=arr[i].z;
+            floats[index+3]=arr[i].w;
         }
 
 
