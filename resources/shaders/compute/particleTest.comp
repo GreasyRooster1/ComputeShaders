@@ -9,11 +9,11 @@ layout(std430, binding=1) buffer Vel{
     vec4 Velocity[];
 };
 
-const float deltaTime = 0.006;
+const float deltaTime = 0.00006;
 const float maxDist = 10.0;
 
 const float particleMass = 0.1;
-const float inverseParticleMass = 1/particleMass;
+const float inverseParticleMass = 1.0/particleMass;
 
 vec3 blackHolePos = vec3(0,0,0);
 float blackHoleMass = 1000.0;
@@ -30,6 +30,7 @@ void main() {
 
     vec3 a = force*inverseParticleMass;
 
-    Position[idx].xyz = vec4(pos+vel * deltaTime + 0.5 *a * deltaTime*deltaTime,1.0);
-    Velocity[idx].xyz = vec4(vel+a*deltaTime,0.0);
+    //Position[idx].xyz = pos+vec3(0.001);
+    Position[idx] = vec4(pos+vel * deltaTime + 0.5 *a * deltaTime*deltaTime,1.0);
+    Velocity[idx] = vec4(vel+a*deltaTime,0.0);
 }

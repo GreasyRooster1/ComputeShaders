@@ -91,7 +91,7 @@ public class Main {
         ResourceLoader resources = new ResourceLoader("resources");
         resources.loadAllResources();
 
-        Camera camera = new Camera(new Vector3f(2f,1f,0f),new Vector3f(0f,0f,0f));
+        Camera camera = new Camera(new Vector3f(6f,1f,0f),new Vector3f(0f,0f,0f));
 
         CubeMap cubeMap = new CubeMap("resources/textures/065.png");
         SkyBox skybox = new SkyBox(cubeMap);
